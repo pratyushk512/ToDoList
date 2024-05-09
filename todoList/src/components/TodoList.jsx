@@ -7,7 +7,7 @@ function TodoList({ todos,setTodos }) {
       {todos && todos.length > 0 ? (
         todos?.map((task, index) => <Task key={index} task={task} setTodos={setTodos} />)
       ) : (
-        <img className=" h-72 w-72 opacity-5 pt-5 left-52" src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L2pvYjY4Ni0yNTMtdi5qcGc.jpg" />
+        <img className="absolute top-40 right-80 h-72 w-72 opacity-5 pt-5 " src="https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA0L2pvYjY4Ni0yNTMtdi5qcGc.jpg" />
       )}
     </ul>
   );
