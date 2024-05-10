@@ -1,19 +1,33 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import TodoList from "./components/TodoList";
+
 function App() {
   const [todos, setTodos] = useState([]);
-  
+
   const inputRef = useRef();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const value = inputRef.current.value;
     if (value.length > 0) {
+      console.log(value);
       setTodos((prevTodos) => [
         ...prevTodos,
         { title: value, id: self.crypto.randomUUID(), isCompleted: false },
       ]);
+
+      const SubmitData = async () => {
+        const response = await fetch("http://localhost:3000/", {
+          method: "POST",
+          mode: 'cors',
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({title : value}),
+        }).then(resp=>resp.json()).then(json=>console.log(json));
+      };
+      await SubmitData();
     }
     event.target.reset();
   };
@@ -62,9 +76,13 @@ function App() {
               </div>
             </form>
             <div className=" w-full h-40 bg-red-500 border-blue-700 border-4 rounded-lg border-double mt-4 ">
-              <h2 className="p-4 text-2xl font-semibold text-white">Tasks Completed</h2>
+              <h2 className="p-4 text-2xl font-semibold text-white">
+                Tasks Completed
+              </h2>
               <div className="relative left-5 w-16 h-16 rounded-full border-white border-4">
-                <p className="relative left-3 top-3 text-lg text-white">{todosCompleted}/{todos.length}</p>
+                <p className="relative left-3 top-3 text-lg text-white">
+                  {todosCompleted}/{todos.length}
+                </p>
               </div>
             </div>
           </div>
