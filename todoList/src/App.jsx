@@ -10,30 +10,22 @@ function App() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const value = inputRef.current.value;
+    let taskContainer = { title: value, id: self.crypto.randomUUID(), isCompleted: false }
     if (value.length > 0) {
       console.log(value);
       setTodos((prevTodos) => [
         ...prevTodos,
-        { title: value, id: self.crypto.randomUUID(), isCompleted: false },
+        taskContainer,
       ]);
 
-      const SubmitData = async () => {
-        const response = await fetch("http://localhost:3000/", {
-          method: "POST",
-          mode: 'cors',
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({title : value}),
-        }).then(resp=>resp.json()).then(json=>console.log(json));
-      };
-      await SubmitData();
+      
+      SubmitData(taskContainer);
     }
     event.target.reset();
   };
 
   const deleteAllTasks = () => {
-    setTodos([]);
+     setTodos([]);
   };
 
   const todosCompleted = todos.filter(
@@ -67,14 +59,14 @@ function App() {
                 >
                   Add
                 </button>
+              </div>
+            </form>
                 <button
                   className="bg-red-700 p-2 text-white text-lg rounded-xl"
                   onClick={deleteAllTasks}
                 >
                   Clear All!
                 </button>
-              </div>
-            </form>
             <div className=" w-full h-40 bg-red-500 border-blue-700 border-4 rounded-lg border-double mt-4 ">
               <h2 className="p-4 text-2xl font-semibold text-white">
                 Tasks Completed
@@ -100,3 +92,15 @@ function App() {
   );
 }
 export default App;
+
+async function SubmitData(taskContainer){
+  
+    await fetch("http://localhost:3000/", {
+      method: "POST",
+      mode: 'cors',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(taskContainer),
+    })
+}
