@@ -1,9 +1,35 @@
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 import TodoList from "./components/TodoList";
-
 function App() {
   const [todos, setTodos] = useState([]);
+  useEffect( () => {
+    const respData = (async function(){
+      const response = await fetch('http://localhost:3000/');
+      
+      const data = await response.json(); 
+      return data; 
+    })();
+    
+    (async () => {
+      let responseData = await respData;
+      console.log(responseData);
+
+      responseData.forEach(element => {
+        if(element.isCompleted == true){
+          
+        }
+
+        setTodos((prevTodos) => [
+          ...prevTodos,
+          element,
+        ]);
+      });
+    })();
+    },[])
+
+    
+  
 
   const inputRef = useRef();
 

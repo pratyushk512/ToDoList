@@ -1,10 +1,14 @@
 import React from "react";
 
 function Task({task,setTodos}) {
-  const deleteTask = () => {
+  const deleteTask = async () => {
     setTodos((prevTodos) => prevTodos.filter((item) => item.id !== task.id));
+    await fetch(`http://localhost:3000/${task?.id}`,{
+      method: 'DELETE'
+    })
+
   };
-  const changeStatus = () => {
+  const changeStatus = async () => {
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === task.id
@@ -12,10 +16,20 @@ function Task({task,setTodos}) {
           : todo
       )
     );
+    
+    await fetch(`http://localhost:3000/${task?.id}`,{
+      method : 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({isCompleted: !task?.is_completed}),
+    })
   };
   return (
     <li id={task?.id}>
       <div className="w-full border-red-500 border-2 border-t-0 p-2">
+      <span className="text-white text-lg">{task?.id}</span>
+        <br />
         <span className="text-white text-lg">{task?.title}</span>
         <br />
         <input type="checkbox" className=" w-6 h-6 p-2 rounded-full bg-transparent" onChange={changeStatus}></input>
