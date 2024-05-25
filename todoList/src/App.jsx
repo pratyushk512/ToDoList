@@ -5,25 +5,70 @@ function App() {
   const [todos, setTodos] = useState([]);
   
   const inputRef = useRef();
+  
+  useEffect(()=>{
+    
+    const fetchAllTodos = async () => {
+      try {
+          const response = await fetch('http://localhost:3000/todos');
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          const data = await response.json();
+          setTodos(data);
+      } catch (error) {
+          console.error('Error fetching todos:', error);
+      }
+  };
+  fetchAllTodos();
+  },[])
 
-  const handleSubmit = (event) => {
+  
+  const handleSubmit =async (event) => {
     event.preventDefault();
     const value = inputRef.current.value;
+    let newTodo={
+      title: value, 
+      id: self.crypto.randomUUID(), 
+      isCompleted: false
+    }
     if (value.length > 0) {
       setTodos((prevTodos) => [
         ...prevTodos,
-        { title: value, id: self.crypto.randomUUID(), isCompleted: false },
+        newTodo,
       ]);
+      fetchData(newTodo);
     }
     event.target.reset();
   };
 
+  async function fetchData(newTodo){
+    const response=await fetch(`http://localhost:3000/newTodo`,{
+        method:'POST',
+        body:JSON.stringify(newTodo),
+        headers:{
+          'Content-Type':'application/json'
+        }
+      })
+      const data=await response.json()
+      console.log(data);
+  };
+  
   const deleteAllTasks = () => {
+    fetch(`http://localhost:3000/todos`, {
+      method: 'DELETE'
+    })
+      .then(response => response.json())
+      .then(deletedDocument => {
+        console.log('Documents deleted:', deletedDocument);
+        // Optionally, update the UI or perform any other action
+      })
+      .catch(error => console.error('Error deleting document:', error));
     setTodos([]);
   };
 
   const todosCompleted = todos.filter(
-    (todo) => todo.is_completed === true
+    (todo) => todo.isCompleted === true
   ).length;
 
   return (
@@ -53,14 +98,15 @@ function App() {
                 >
                   Add
                 </button>
-                <button
-                  className="bg-red-700 p-2 text-white text-lg rounded-xl"
+                
+              </div>
+            </form>
+            <button
+                  className=" relative w-24 left-72 -top-11 bg-red-700 p-2 text-white text-lg rounded-xl"
                   onClick={deleteAllTasks}
                 >
                   Clear All!
-                </button>
-              </div>
-            </form>
+              </button>
             <div className=" w-full h-40 bg-red-500 border-blue-700 border-4 rounded-lg border-double mt-4 ">
               <h2 className="p-4 text-2xl font-semibold text-white">Tasks Completed</h2>
               <div className="relative left-5 w-16 h-16 rounded-full border-white border-4">
