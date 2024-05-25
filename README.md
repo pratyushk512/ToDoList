@@ -49,7 +49,6 @@ nodemon index.js
 
 * Create new tasks with titles and descriptions.
 * Mark tasks as completed.
-* Edit existing tasks.
 * Delete tasks.
 * Filter tasks by status (completed, active).
 
